@@ -59,7 +59,51 @@ npm run serve
 
 这将在本地启动一个开发服务器，通常在 `http://localhost:8080` 上可访问。
 
-## 4. 技术栈和版本
+## 4. 协作开发指南
+
+遵循以下Git协作流程：
+
+1. 克隆仓库：
+```bash
+git clone <项目仓库地址>
+```
+
+2. 创建功能分支：
+```bash
+git checkout -b feature/your-feature-name
+
+命名规则说明：
+
+ 1. 前缀规范 ：
+   
+   - refactor/ 表示架构/代码重构
+   - feature/ 用于新功能开发（现有规范）
+   - hotfix/ 用于紧急修复
+ 2.  描述部分 ：
+   
+   - 使用小写字母和连字符
+   - 包含重构目标（如 overhaul ）和时间标识（如 2024 ）
+   - 示例： refactor/core-module-2024Q3
+ 3. 注意事项 ：
+   
+   - 避免使用 update / change 等模糊词汇
+   - 长度控制在35个字符以内
+```
+
+3. 开发完成后推送分支：
+```bash
+git push origin feature/your-feature-name
+```
+
+4. 在GitHub创建Pull Request进行代码审查
+5. 合并通过后删除本地分支：
+```bash
+git branch -d feature/your-feature-name
+```
+
+完整协作指南请参考<mcfile name="Git多人协作的使用方法.md" path="d:\ReserveSage\reservesageui\Git多人协作的使用方法.md"></mcfile>
+
+## 5. 技术栈和版本
 
 本项目主要基于以下技术栈和版本：
 
