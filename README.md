@@ -86,7 +86,7 @@ git pull origin main
    - 包含重构目标（如 overhaul ）和时间标识（如 2024 ）
    - 示例： refactor/core-module-2024Q3
  3. 注意事项 ：
-   - 协作建议 ：添加开发者标识： refactor/major-restructure-zhangsan;使用任务编号： refactor/TRD-123-major-restructure
+   
    - 避免使用 update / change 等模糊词汇
    - 长度控制在35个字符以内
 ```
