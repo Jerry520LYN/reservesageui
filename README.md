@@ -71,7 +71,8 @@ git clone <项目仓库地址>
 2. 创建功能分支：
 ```bash
 git checkout -b feature/your-feature-name
-
+# 如果已经克隆并创建分支，在每次工作拉取对应分支的最新代码
+git pull origin main
 命名规则说明：
 
  1. 前缀规范 ：
