@@ -258,3 +258,6 @@ Git 本身只管理代码，而 GitHub 提供了一套强大的项目管理工�
       * `--hard`：彻底丢弃所有修改（**慎用**）。
   * **`git revert`**：**新增** 一个提交来撤销更改。适用于公共分支，因为它保留了完整的历史记录，不会影响其他协作者。
   * **`git reflog`**：是你的**后悔药**。当你不知道如何回退，或者不小心回退错了，都可以用它来查看操作历史，然后配合 `git reset` 恢复。
+---
+# git出现Please make sure you have the correct access rights and the repository exists.问题解决
+https://blog.csdn.net/Jack_13201/article/details/107438527
