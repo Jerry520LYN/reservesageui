@@ -166,3 +166,6 @@ Git 本身只管理代码，而 GitHub 提供了一套强大的项目管理工�
   * `git checkout`: 切换分支。
   * `git push`: 将本地提交推送到远程仓库。
   * `git merge`: （虽然 GitHub 按钮会帮你做，但理解其概念很重要）合并分支。
+
+# 如果git出现Please make sure you have the correct access rights and the repository exists.问题，参考下面文章
+https://blog.csdn.net/Jack_13201/article/details/107438527
