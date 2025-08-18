@@ -689,7 +689,13 @@ export default {
           };
           console.warn('热力图数据无效，使用空数据');
         }
-
+        const series = [{
+          name: '用电负荷',
+          type: 'heatmap', // 硬编码type，确保不会缺失
+          data: Array.isArray(heatmapData.data) ? heatmapData.data : [],
+          label: { show: false },
+          emphasis: { itemStyle: { shadowBlur: 10, shadowColor: 'rgba(0, 0, 0, 0.5)' } }
+        }];
         const option = {
           tooltip: {
             position: 'top',
@@ -729,16 +735,10 @@ export default {
             text: ['高', '低'],
             inRange: { color: ['#d5f5f9', '#65b7f3', '#0071ce', '#002c71'] }
           },
-          series: [{
-            name: '用电负荷',
-            type: 'heatmap',
-            // 确保使用正确的数据源
-            data: heatmapData.data || [],
-            label: { show: false },
-            emphasis: { itemStyle: { shadowBlur: 10, shadowColor: 'rgba(0, 0, 0, 0.5)' } }
-          }]
+          series: series
         };
         chartInstances.loadHeatmapChart.setOption(option);
+
       } catch (error) {
         console.error('绘制热力图时出错:', error);
         ElMessage.error('热力图加载失败，请重试');
@@ -841,12 +841,7 @@ export default {
       ElMessage({ message: '数据已刷新', type: 'success' });
     };
 
-    // 处理窗口大小变化
-    const handleResize = () => {
-      for (const key in chartInstances) {
-        if (chartInstances[key]) chartInstances[key].resize();
-      }
-    };
+
 
     // 监听图表相关参数变化，自动刷新图表
     watch([voltageCurrentChartType, powerTrendTimespan, energyConsumptionType, heatmapTimeRange, showThreePhase], () => {
@@ -863,14 +858,11 @@ export default {
         drawLoadHeatmapChart();
         drawPhaseAnalysisChart();
         setRefreshInterval(refreshInterval.value);
-        window.addEventListener('resize', handleResize);
       });
     });
 
     // 组件卸载时清理
     onUnmounted(() => {
-      if (refreshTimer) clearInterval(refreshTimer);
-      window.removeEventListener('resize', handleResize);
       for (const key in chartInstances) {
         if (chartInstances[key]) chartInstances[key].dispose();
       }
@@ -1051,32 +1043,4 @@ export default {
   min-height: 300px; /* 确保图表容器有足够高度 */
 }
 
-/* 响应式适配 */
-@media (max-width: 768px) {
-  .electric-meter-monitor {
-    padding: 10px;
-  }
-
-  .chart-row {
-    gap: 15px;
-  }
-
-  .first-chart-row .voltage-current-chart,
-  .first-chart-row .power-trend-chart,
-  .second-chart-row .energy-consumption-chart,
-  .second-chart-row .load-heatmap-chart,
-  .second-chart-row .phase-analysis-chart {
-    flex: 100%;
-    height: 300px;
-    min-width: auto;
-  }
-
-  .alarm-table {
-    height: 300px;
-  }
-
-  .card-value {
-    font-size: 20px;
-  }
-}
 </style>
