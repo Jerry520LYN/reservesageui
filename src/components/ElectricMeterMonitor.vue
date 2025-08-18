@@ -651,7 +651,7 @@ export default {
           {
             name: '电能消耗',
             type: 'pie',
-            radius: ['40%', '70%'],
+            radius: ['30%', '50%'],
             avoidLabelOverlap: false,
             itemStyle: { borderRadius: 10, borderColor: '#fff', borderWidth: 2 },
             label: { show: true, formatter: '{b}: {d}%' },
@@ -679,22 +679,34 @@ export default {
 
         chartInstances.loadHeatmapChart = echarts.init(loadHeatmapChart.value);
 
-        const heatmapData = generateLoadHeatmapData(heatmapTimeRange.value);
+        let heatmapData = generateLoadHeatmapData(heatmapTimeRange.value);
         // 验证数据格式
         if (!heatmapData || !heatmapData.data || !Array.isArray(heatmapData.data)) {
-          throw new Error('热力图数据格式不正确');
+          heatmapData = {
+            days: [],
+            hours: [],
+            data: [] // 空数据避免报错
+          };
+          console.warn('热力图数据无效，使用空数据');
         }
 
         const option = {
           tooltip: {
             position: 'top',
             formatter: function (params) {
-              if (!params || !params.data || !params.data.value) return '';
+              // 更健壮的参数检查
+              if (!params || !params.data || !params.data.value || params.data.value.length < 3) {
+                return '数据格式异常';
+              }
               const [d, h, value] = params.data.value;
+              // 检查索引有效性，避免数组越界
+              if (d < 0 || d >= heatmapData.days.length || h < 0 || h >= heatmapData.hours.length) {
+                return `索引无效: 日=${d}, 时=${h}<br>负荷: ${value} kW`;
+              }
               return `${heatmapData.days[d]} ${heatmapData.hours[h]}<br>负荷: ${value} kW`;
             }
           },
-          grid: { top: '10%', bottom: '10%', left: '10%', right: '15%' },
+          grid: { top: '10%', bottom: '20%', left: '10%', right: '15%' },
           xAxis: {
             type: 'category',
             data: heatmapData.hours,
@@ -710,7 +722,7 @@ export default {
           visualMap: {
             min: 0,
             max: 100,
-            calculable: true,
+            calculable: false,
             orient: 'horizontal',
             left: 'center',
             bottom: '0%',
@@ -721,12 +733,11 @@ export default {
             name: '用电负荷',
             type: 'heatmap',
             // 确保使用正确的数据源
-            data: heatmapData.data.map(item => item.value),
+            data: heatmapData.data || [],
             label: { show: false },
             emphasis: { itemStyle: { shadowBlur: 10, shadowColor: 'rgba(0, 0, 0, 0.5)' } }
           }]
         };
-
         chartInstances.loadHeatmapChart.setOption(option);
       } catch (error) {
         console.error('绘制热力图时出错:', error);
