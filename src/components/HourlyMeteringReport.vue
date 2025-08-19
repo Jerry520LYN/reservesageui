@@ -843,7 +843,8 @@ export default {
 .power-curve {
   left: 0;
   top: 0;
-  width: 66%;
+  bottom:3;
+  width: 50%;
   height: 380px;
 }
 
@@ -851,7 +852,7 @@ export default {
 .charge-discharge {
   right: 0;
   top: 0;
-  width: 32%;
+  width: 46%;
   height: 380px;
 }
 
@@ -859,7 +860,7 @@ export default {
 .soc-trend {
   left: 0;
   top: 400px;
-  width: 32%;
+  width: 28%;
   height: 380px;
 }
 
