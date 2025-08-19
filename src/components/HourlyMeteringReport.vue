@@ -49,21 +49,21 @@
     <!-- 数据表格展示 -->
     <div class="data-table">
       <el-table :data="tableData" border style="width: 100%" height="300" v-if="dataLoaded">
-        <el-table-column prop="time" label="时间点" width="180" />
-        <el-table-column prop="power" label="功率(kW)" width="120" />
-        <el-table-column prop="energy" label="电量(kWh)" width="120" />
-        <el-table-column prop="soc" label="SOC(%)" width="100" />
-        <el-table-column prop="chargeStatus" label="充放电状态" width="120">
+        <el-table-column prop="time" label="时间点" width="166.5" />
+        <el-table-column prop="power" label="功率(kW)" width="166.5" />
+        <el-table-column prop="energy" label="电量(kWh)" width="166.5" />
+        <el-table-column prop="soc" label="SOC(%)" width="166.5" />
+        <el-table-column prop="chargeStatus" label="充放电状态" width="166.5">
           <template #default="scope">
             <el-tag :type="scope.row.chargeStatus === '充电' ? 'success' : (scope.row.chargeStatus === '放电' ? 'danger' : 'info')">
               {{ scope.row.chargeStatus }}
             </el-tag>
           </template>
         </el-table-column>
-        <el-table-column prop="price" label="电价(元/kWh)" width="130" />
-        <el-table-column prop="income" label="收益(元)" width="120" />
-        <el-table-column prop="temperature" label="温度(℃)" width="120" />
-        <el-table-column prop="humidity" label="湿度(%)" width="120" />
+        <el-table-column prop="price" label="电价(元/kWh)" width="166.5" />
+        <el-table-column prop="income" label="收益(元)" width="166.5" />
+        <el-table-column prop="temperature" label="温度(℃)" width="166.5" />
+        <el-table-column prop="humidity" label="湿度(%)" width="166.5" />
       </el-table>
       <div class="empty-data" v-else>
         <el-empty description="暂无数据，请选择日期查询"></el-empty>
@@ -768,6 +768,7 @@ export default {
       const month = String(today.getMonth() + 1).padStart(2, '0')
       const day = String(today.getDate()).padStart(2, '0')
       queryDate.value = `${year}-${month}-${day}`
+      queryData()
     })
 
     return {
@@ -849,7 +850,7 @@ export default {
 .charge-discharge {
   right: 0;
   top: 0;
-  width: 46%;
+  width: 47%;
   height: 380px;
 }
 
@@ -865,7 +866,7 @@ export default {
 .operation-status {
   left: 30%;
   top: 410px;
-  width: 35%;
+  width: 36%;
   height: 380px;
 }
 
@@ -873,7 +874,7 @@ export default {
 .income-analysis {
   right: 0;
   top: 410px;
-  width: 31.5%;
+  width: 31%;
   height: 380px;
 }
 
