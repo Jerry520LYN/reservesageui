@@ -20,22 +20,22 @@
 
     <div class="chart-container">
       <!-- 充放电趋势图 -->
-      <div class="chart-item charging-chart" ref="chargingChart"></div>
+      <div class="chart-item" id="charging-chart" ref="chargingChart"></div>
       
       <!-- 电能效率分析图 -->
-      <div class="chart-item efficiency-chart" ref="efficiencyChart"></div>
+      <div class="chart-item" id="efficiency-chart" ref="efficiencyChart"></div>
       
       <!-- 能量分配比例图 -->
-      <div class="chart-item distribution-chart" ref="distributionChart"></div>
+      <div class="chart-item" id="distribution-chart" ref="distributionChart"></div>
       
       <!-- 异常情况统计图 -->
-      <div class="chart-item abnormal-chart" ref="abnormalChart"></div>
+      <div class="chart-item" id="abnormal-chart" ref="abnormalChart"></div>
       
       <!-- 月度电力统计图 -->
-      <div class="chart-item monthly-chart" ref="monthlyChart"></div>
+      <div class="chart-item" id="monthly-chart" ref="monthlyChart"></div>
       
       <!-- 实时功率表盘 -->
-      <div class="chart-item power-gauge" ref="powerGauge"></div>
+      <div class="chart-item" id="power-gauge" ref="powerGauge"></div>
     </div>
   </div>
 </template>
@@ -230,8 +230,7 @@ const updateChargingChart = (data) => {
     grid: {
       left: '3%',
       right: '4%',
-      bottom: '3%',
-      top: '20%',
+      bottom: '0%',
       containLabel: true
     },
     xAxis: {
@@ -329,8 +328,7 @@ const updateEfficiencyChart = (data) => {
     grid: {
       left: '3%',
       right: '4%',
-      bottom: '3%',
-      top: '15%',
+      bottom: '0%',
       containLabel: true
     },
     xAxis: {
@@ -345,7 +343,18 @@ const updateEfficiencyChart = (data) => {
         max: 1,
         position: 'left',
         axisLabel: {
-          formatter: '{value * 100}%'
+          // 修复效率百分比显示格式问题
+          formatter: function(value) {
+            return (value * 100).toFixed(0) + '%'; // 确保正确计算并显示百分比
+          }
+        },
+        splitLine: {
+          show: true,
+          lineStyle: {
+            color: '#9C27B0',
+            width: 1,
+            type: 'solid'
+          }
         }
       },
       {
@@ -410,7 +419,7 @@ const updateDistributionChart = (data) => {
     legend: {
       orient: 'vertical',
       left: 'left',
-      top: 'center',
+      bottom: 0,
       data: data.types
     },
     series: [
@@ -466,8 +475,7 @@ const updateAbnormalChart = (data) => {
     grid: {
       left: '3%',
       right: '4%',
-      bottom: '3%',
-      top: '15%',
+      bottom: '0%',
       containLabel: true
     },
     xAxis: {
@@ -570,7 +578,10 @@ const updateMonthlyChart = (data) => {
         min: 0.7,
         max: 1,
         axisLabel: {
-          formatter: '{value * 100}%'
+          //修复百分比显示问题
+          formatter: function(value) {
+            return (value * 100).toFixed(0) + '%';
+          }
         }
       }
     ],
@@ -613,13 +624,16 @@ const updateMonthlyChart = (data) => {
 // 更新实时功率表盘
 const updatePowerGauge = () => {
   if (!chartInstances.gauge) return;
-  
+
   // 随机生成当前功率值(0-100)
   const powerValue = Math.floor(Math.random() * 100);
-  
+  const gaugeRadius = '70%'; // 核心调整项：控制仪表盘大小
+
   const option = {
     title: {
       text: '实时功率表盘',
+      center: ['50%', '60%'], // 位置与半径配合调整
+      radius: gaugeRadius, // 半径大小（核心参数）
       textStyle: {
         fontSize: 14
       }
@@ -631,15 +645,20 @@ const updatePowerGauge = () => {
       {
         name: '实时功率',
         type: 'gauge',
-        detail: { 
+        detail: {
           formatter: '{value}%',
-          fontSize: 16
+          fontSize: 16,
+          offsetCenter: [0, '60%'], // 调整数值位置（水平居中，垂直向下偏移60%）
         },
-        data: [{ value: powerValue, name: '功率负载' }],
+        data: [{
+          value: powerValue,
+          name: '功率负载'
+        }],
         axisLabel: {
           formatter: function(value) {
             return value + '%';
-          }
+          },
+          distance: 32, // 刻度标签与表盘的距离
         },
         axisLine: {
           lineStyle: {
@@ -659,7 +678,7 @@ const updatePowerGauge = () => {
       }
     ]
   };
-  
+
   chartInstances.gauge.setOption(option);
 };
 
@@ -701,9 +720,9 @@ onMounted(() => {
 <style scoped>
 .power-operation-report {
   width: 100%;
+  height: 100%;
   padding: 20px;
   box-sizing: border-box;
-  background-color: #f5f7fa;
 }
 
 .report-header {
@@ -719,70 +738,69 @@ onMounted(() => {
 }
 
 .chart-container {
-  position: relative; /* 父容器必须是相对定位 */
+  position: relative;
   width: 100%;
-  height: 1250px; /* 给一个固定的高度，或者根据需要计算 */
-  background-color: #fff;
-  border: 1px solid #ebeef5;
+  height: calc(100% - 80px);
+  min-height: 700px;
 }
 
 .chart-item {
-  position: absolute; /* 所有图表项都是绝对定位 */
+  position: absolute;
   border: 1px solid #ebeef5;
   border-radius: 4px;
   box-shadow: 0 2px 12px 0 rgba(0, 0, 0, 0.1);
   background-color: #fff;
-  padding: 10px;  
+  padding: 10px;
+  box-sizing: border-box;
 }
 
-/* --- 这里是新的布局定义 --- */
-
-/* 充放电趋势图 (左上，较大) */
-.charging-chart {
+/* 充放电趋势图 */
+#charging-chart {
   top: 0;
   left: 0;
-  width: 49%;
-  height: 380px;
-}
-
-/* 电能效率分析图 (右上，较大) */
-.efficiency-chart {
-  top: 0;
-  right: 0;
-  width: 47.5%;
-  height: 380px;
-}
-
-/* 能量分配比例图 (左下) */
-.distribution-chart {
-  top: 410px;
-  left: 0;
-  width: 36.5%;
-  height: 380px;
-}
-
-/* 异常情况统计图 (中下) */
-.abnormal-chart {
-  top: 410px;
-  left: 38%; /* 32% + 2% 间距 */
-  width: 29%;
-  height: 380px;
-}
-
-/* 实时功率表盘 (右下) */
-.power-gauge {
-  top: 410px;
-  right: 0;
-  width: 30%;
-  height: 380px;
-}
-
-/* 月度电力统计图 (可以暂时隐藏或放在最下面) */
-.monthly-chart {
-  top: 830px; /* 放在下面，如果需要显示，则要增加 .chart-container 的高度 */
-  left: 0;
-  width: 98.5%;
+  width: 100%;
   height: 400px;
 }
 
+/* 电能效率分析图 */
+#efficiency-chart {
+  top: 430px;
+  left: 0;
+  width: 65%;
+  height: 400px;
+}
+
+/* 实时功率表盘 */
+#power-gauge {
+  top: 430px;
+  right: 0;
+  width: 32%;
+  height: 400px;
+}
+
+/* 能量分配比例图 */
+#distribution-chart {
+  top: 870px;
+  left: 0;
+  width: 60%;
+  height: 400px;
+}
+
+/* 异常情况统计图 */
+#abnormal-chart {
+  top: 870px;
+  right: 0;
+  width: 38%;
+  height: 400px;
+}
+
+
+
+/* 月度电力统计图 */
+#monthly-chart {
+  top: 1300px;
+  left: 0;
+  width: 100%;
+  height: 60%;
+}
 </style>
