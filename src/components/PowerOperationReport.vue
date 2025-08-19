@@ -721,7 +721,7 @@ onMounted(() => {
 .chart-container {
   position: relative; /* 父容器必须是相对定位 */
   width: 100%;
-  height: 800px; /* 给一个固定的高度，或者根据需要计算 */
+  height: 1250px; /* 给一个固定的高度，或者根据需要计算 */
   background-color: #fff;
   border: 1px solid #ebeef5;
 }
@@ -781,7 +781,7 @@ onMounted(() => {
 .monthly-chart {
   top: 830px; /* 放在下面，如果需要显示，则要增加 .chart-container 的高度 */
   left: 0;
-  width: 98%;
+  width: 98.5%;
   height: 400px;
 }
 
