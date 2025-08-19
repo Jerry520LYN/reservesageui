@@ -840,22 +840,29 @@ export default defineComponent({
   }
 });
 </script>
-
 <style scoped>
+/* --- 1. 主容器和页面头部 --- */
 .dc-screen-monitor {
-  position: relative;
   width: 1200px;
-  height: 100%;
+  margin: 0 auto; /* 让容器在大于1200px的屏幕上居中 */
   padding: 20px;
   background-color: #f5f7fa;
-  min-height: 950px;
+  
+  /* === CSS Grid 核心 === */
+  display: grid;
+  /* 定义三列：左侧300px，中间自动填充剩余空间，右侧320px */
+  grid-template-columns: 300px 1fr 320px;
+  /* 定义行高自动，并设置所有元素的间距 */
+  grid-auto-rows: auto;
+  gap: 20px; /* 控制所有卡片之间的间距 */
 }
 
 .page-header {
+  /* 让头部占据所有三列的宽度 */
+  grid-column: 1 / -1; 
   display: flex;
-  align-items: left;
-  margin-bottom: 2px;
-  gap:50px;
+  align-items: center;
+  margin-bottom: 20px; /* 增加一点和下面内容的间距 */
 }
 
 .page-header h2 {
@@ -863,35 +870,87 @@ export default defineComponent({
   font-size: 24px;
   font-weight: bold;
   color: #303133;
-  align-items: center;
 }
 
 .header-actions {
   display: flex;
-  align-items: center; /* 确保内部元素也垂直居中 */
-  gap: 15px; /* 可以调整为您想要的间距，例如 15px */
+  align-items: center;
+  gap: 15px;
   margin-left: auto;
 }
 
-.refresh-rate-select {
-  width: 120px;
-}
-
+/* --- 2. 通用卡片和图表样式 --- */
 .card-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
 }
 
+/* 让 el-card 和 chart 填满父容器（Grid单元格）的高度 */
+.el-card {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+.el-card__body {
+  flex-grow: 1;
+}
+
 .chart {
   width: 100%;
-  height: 220px;
+  height: 100%; /* 占满卡片剩余空间 */
+  min-height: 200px; /* 保证一个最小高度 */
 }
 
-.chart-item {
-  /* This class is for easier selection of all chart divs. */
+/* --- 3. 网格布局定位 (替换所有 position: absolute) --- */
+
+/* --- 左侧列 (Column 1) --- */
+#status-card-wrapper {
+  grid-column: 1 / 2;
+  grid-row: 2 / 3; /* 头部在第1行，所以从第2行开始 */
 }
 
+#battery-status-chart-wrapper {
+  grid-column: 1 / 2;
+  grid-row: 3 / 4;
+}
+
+#device-list-wrapper {
+  grid-column: 1 / 2;
+  grid-row: 4 / 6; /* 让设备列表占据两行的高度空间 */
+}
+
+/* --- 中间主内容区 (Column 2) --- */
+#voltage-chart-wrapper {
+  grid-column: 2 / 4;
+  grid-row: 2 / 3; /* 让电压表占据两行的高度，更突出 */
+}
+
+#current-chart-wrapper {
+  grid-column: 2 / 4;
+  grid-row: 3 / 3;
+}
+
+#temperature-chart-wrapper {
+  grid-column: 2 / 3;
+  grid-row: 4 / 5;
+}
+
+#alarm-list-wrapper {
+  /* 让告警列表占据中间和右侧两列，更宽敞 */
+  grid-column: 2 / 4;
+  grid-row: 5 / 5;
+}
+
+/* --- 右侧列 (Column 3) --- */
+
+
+#alarm-chart-wrapper {
+  grid-column: 3 / 4;
+  grid-row: 4 / 5;
+}
+
+/* --- 其他样式 --- */
 .status-info {
   display: flex;
   flex-direction: column;
@@ -910,75 +969,5 @@ export default defineComponent({
 
 .device-list-container .el-table {
   max-height: 250px;
-}
-
-/* Page Layout Styling */
-#status-card-wrapper {
-  position: absolute;
-  top: 80px;
-  left: 20px;
-  width: 300px;
-  height: 180px;
-}
-
-#voltage-chart-wrapper {
-  position: absolute;
-  top: 80px;
-  left: 328px;
-  width: 880px;
-  height: 390px;
-}
-
-#current-chart-wrapper {
-  position: absolute;
-  top: 800px;
-  right: 20px;
-  width: 320px;
-  height: 300px;
-}
-
-#battery-status-chart-wrapper {
-  position: absolute;
-  top: 280px;
-  left: 20px;
-  width: 300px;
-  height: 280px;
-}
-
-#temperature-chart-wrapper {
-  position: absolute;
-  top: 400px;
-  left: 340px;
-  width: calc(100% - 700px);
-  height: 280px;
-}
-
-#alarm-chart-wrapper {
-  position: absolute;
-  top: 400px;
-  right: 20px;
-  width: 320px;
-  height: 280px;
-}
-
-#device-list-wrapper {
-  position: absolute;
-  top: 580px;
-  left: 20px;
-  width: 300px;
-  height: 320px;
-}
-
-#alarm-list-wrapper {
-  position: absolute;
-  top: 700px;
-  left: 340px;
-  width: calc(100% - 360px);
-  height: 200px;
-}
-
-/* Ensure absolutely positioned elements do not overflow */
-.chart-container, .status-card, .device-list-container, .alarm-list-container {
-  overflow: hidden;
 }
 </style>
