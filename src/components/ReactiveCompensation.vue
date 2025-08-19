@@ -34,66 +34,6 @@
       </div>
     </div>
 
-    <!-- 电压监测图表 -->
-    <div class="chart-container voltage-chart">
-      <div class="chart-header">
-        <h3>三相电压监测</h3>
-        <el-radio-group v-model="voltageTimeRange" size="small" @change="updateVoltageChart">
-          <el-radio-button label="day">日</el-radio-button>
-          <el-radio-button label="week">周</el-radio-button>
-          <el-radio-button label="month">月</el-radio-button>
-        </el-radio-group>
-      </div>
-      <div class="chart-content">
-        <div ref="voltageChartRef" class="chart"></div>
-      </div>
-    </div>
-
-    <!-- 功率因数监测图表 -->
-    <div class="chart-container power-factor-chart">
-      <div class="chart-header">
-        <h3>功率因数监测</h3>
-        <el-radio-group v-model="powerFactorTimeRange" size="small" @change="updatePowerFactorChart">
-          <el-radio-button label="day">日</el-radio-button>
-          <el-radio-button label="week">周</el-radio-button>
-          <el-radio-button label="month">月</el-radio-button>
-        </el-radio-group>
-      </div>
-      <div class="chart-content">
-        <div ref="powerFactorChartRef" class="chart"></div>
-      </div>
-    </div>
-
-    <!-- 无功功率监测图表 -->
-    <div class="chart-container reactive-power-chart">
-      <div class="chart-header">
-        <h3>无功功率监测</h3>
-        <el-radio-group v-model="reactivePowerTimeRange" size="small" @change="updateReactivePowerChart">
-          <el-radio-button label="day">日</el-radio-button>
-          <el-radio-button label="week">周</el-radio-button>
-          <el-radio-button label="month">月</el-radio-button>
-        </el-radio-group>
-      </div>
-      <div class="chart-content">
-        <div ref="reactivePowerChartRef" class="chart"></div>
-      </div>
-    </div>
-
-    <!-- 实时波形图 -->
-    <div class="chart-container waveform-chart">
-      <div class="chart-header">
-        <h3>电压电流实时波形</h3>
-        <el-select v-model="selectedPhase" size="small" @change="updateWaveformChart">
-          <el-option label="A相" value="A" />
-          <el-option label="B相" value="B" />
-          <el-option label="C相" value="C" />
-        </el-select>
-      </div>
-      <div class="chart-content">
-        <div ref="waveformChartRef" class="chart"></div>
-      </div>
-    </div>
-
     <!-- 补偿单元运行状态 -->
     <div class="chart-container compensation-units-status">
       <div class="chart-header">
@@ -127,10 +67,10 @@
                     <span class="info-label">投切状态:</span>
                     <span class="info-value">
                       <el-switch
-                        v-model="unit.isActive"
-                        :active-color="unit.isActive ? '#13ce66' : '#ff4949'"
-                        :inactive-color="unit.isActive ? '#13ce66' : '#ff4949'"
-                        :disabled="true"
+                          v-model="unit.isActive"
+                          :active-color="unit.isActive ? '#13ce66' : '#ff4949'"
+                          :inactive-color="unit.isActive ? '#13ce66' : '#ff4949'"
+                          :disabled="true"
                       />
                     </span>
                   </div>
@@ -167,9 +107,9 @@
           <el-table-column label="操作" width="100">
             <template #default="scope">
               <el-button
-                v-if="scope.row.status !== '已处理'"
-                size="small"
-                @click="handleAlarm(scope.row)"
+                  v-if="scope.row.status !== '已处理'"
+                  size="small"
+                  @click="handleAlarm(scope.row)"
               >
                 处理
               </el-button>
@@ -179,17 +119,79 @@
         </el-table>
         <div class="pagination-container">
           <el-pagination
-            background
-            layout="total, sizes, prev, pager, next"
-            :total="alarmTotal"
-            :page-size="pageSize"
-            :current-page="currentPage"
-            @size-change="handleSizeChange"
-            @current-change="handleCurrentChange"
+              background
+              layout="total, sizes, prev, pager, next"
+              :total="alarmTotal"
+              :page-size="pageSize"
+              :current-page="currentPage"
+              @size-change="handleSizeChange"
+              @current-change="handleCurrentChange"
           />
         </div>
       </div>
     </div>
+
+    <!-- 无功功率监测图表 -->
+    <div class="chart-container reactive-power-chart">
+      <div class="chart-header">
+        <h3>无功功率监测</h3>
+        <el-radio-group v-model="reactivePowerTimeRange" size="small" @change="updateReactivePowerChart">
+          <el-radio-button label="day">日</el-radio-button>
+          <el-radio-button label="week">周</el-radio-button>
+          <el-radio-button label="month">月</el-radio-button>
+        </el-radio-group>
+      </div>
+      <div class="chart-content">
+        <div ref="reactivePowerChartRef" class="chart"></div>
+      </div>
+    </div>
+
+    <!-- 功率因数监测图表 -->
+    <div class="chart-container power-factor-chart">
+      <div class="chart-header">
+        <h3>功率因数监测</h3>
+        <el-radio-group v-model="powerFactorTimeRange" size="small" @change="updatePowerFactorChart">
+          <el-radio-button label="day">日</el-radio-button>
+          <el-radio-button label="week">周</el-radio-button>
+          <el-radio-button label="month">月</el-radio-button>
+        </el-radio-group>
+      </div>
+      <div class="chart-content">
+        <div ref="powerFactorChartRef" class="chart"></div>
+      </div>
+    </div>
+
+    <!-- 电压监测图表 -->
+    <div class="chart-container voltage-chart">
+      <div class="chart-header">
+        <h3>三相电压监测</h3>
+        <el-radio-group v-model="voltageTimeRange" size="small" @change="updateVoltageChart">
+          <el-radio-button label="day">日</el-radio-button>
+          <el-radio-button label="week">周</el-radio-button>
+          <el-radio-button label="month">月</el-radio-button>
+        </el-radio-group>
+      </div>
+      <div class="chart-content">
+        <div ref="voltageChartRef" class="chart"></div>
+      </div>
+    </div>
+
+    <!-- 实时波形图 -->
+    <div class="chart-container waveform-chart">
+      <div class="chart-header">
+        <h3>电压电流实时波形</h3>
+        <el-select v-model="selectedPhase" size="small" @change="updateWaveformChart" class="phase-selector">
+          <el-option label="A相" value="A" />
+          <el-option label="B相" value="B" />
+          <el-option label="C相" value="C" />
+        </el-select>
+      </div>
+      <div class="chart-content">
+        <div ref="waveformChartRef" class="chart"></div>
+      </div>
+    </div>
+
+
   </div>
 </template>
 
@@ -630,9 +632,9 @@ const currentPage = ref(1)
 const selectedPhase = ref('A')
 const waveformChartOption = reactive({
   title: {
-    text: 'A相电压电流波形',
+    top: '10px',
     left: 'center',
-    show: false
+    show: true
   },
   tooltip: {
     trigger: 'axis',
@@ -645,13 +647,13 @@ const waveformChartOption = reactive({
   },
   legend: {
     data: ['电压', '电流'],
-    top: '5%'
+    top: '35px'
   },
   grid: {
     left: '3%',
     right: '4%',
     bottom: '8%',
-    top: '15%',
+    top: '18%',
     containLabel: true
   },
   xAxis: {
@@ -669,6 +671,14 @@ const waveformChartOption = reactive({
         lineStyle: {
           color: '#5470c6'
         }
+      },
+      splitLine: {
+        show: true, // 显示网格线
+        lineStyle: {
+          color: '#5470c6', // 浅蓝色横线（与电压轴颜色呼应）
+          width: 1,
+          type: 'solid' // 实线
+        }
       }
     },
     {
@@ -680,8 +690,18 @@ const waveformChartOption = reactive({
         lineStyle: {
           color: '#91cc75'
         }
+      },
+      splitLine: {
+        show: true, // 显示网格线
+        lineStyle: {
+          color: '#91cc75', // 浅绿色横线（与电压轴颜色呼应）
+          width: 1,
+          type: 'solid' // 实线
+        }
       }
-    }
+    },
+
+
   ],
   series: [
     {
@@ -1086,7 +1106,7 @@ export default {
   border-radius: 4px;
   box-shadow: 0 2px 12px 0 rgba(0, 0, 0, 0.1);
   padding: 15px;
-  margin-bottom: 0px;
+  margin-bottom: 5px;
   position: absolute;
 }
 
@@ -1115,22 +1135,11 @@ export default {
 }
 
 /* 各图表定位 */
-.compensation-units-status {
-  top: 240px;
-  left: 20px;
-  width: 95%;
-  height: 470px;
-  overflow-y: auto;
-}
-.unit-status-content {
-  margin-top: 10px;
-}
-
 .unit-card {
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-}
+                  display: flex;
+                  flex-direction: column;
+                  gap: 8px;
+                }
 
 .unit-name {
   font-size: 16px;
@@ -1143,6 +1152,17 @@ export default {
   margin-top: 5px;
 }
 
+.compensation-units-status {
+  top: 240px;
+  left: 20px;
+  width: 95%;
+  height: 470px;
+  overflow-y: auto;
+}
+.unit-status-content {
+  margin-top: 10px;
+}
+
 .alarm-table {
   top: 800px;
   left: 20px;
@@ -1153,7 +1173,8 @@ export default {
 .pagination-container {
   margin-top: 15px;
   display: flex;
-  justify-content: center;
+  justify-content: flex-end; /* 靠右对齐 */
+  padding-right: 20px; /* 右侧留白，避免贴边 */
 }
 
 .reactive-power-chart {
@@ -1180,8 +1201,12 @@ export default {
   top: 2400px;
   left:20px;
   width: 95%;
-  height: 400px;
+  height: 500px;
 }
 
+.phase-selector {
+  width: auto !important; /* 宽度自适应内容，而非默认100%或固定值 */
+  min-width: 150px; /* 最小宽度，避免内容折行 */
+}
 
 </style>
