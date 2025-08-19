@@ -230,8 +230,7 @@ const updateChargingChart = (data) => {
     grid: {
       left: '3%',
       right: '4%',
-      bottom: '3%',
-      top: '15%',
+      bottom: '0%',
       containLabel: true
     },
     xAxis: {
@@ -329,8 +328,7 @@ const updateEfficiencyChart = (data) => {
     grid: {
       left: '3%',
       right: '4%',
-      bottom: '3%',
-      top: '15%',
+      bottom: '0%',
       containLabel: true
     },
     xAxis: {
@@ -466,8 +464,7 @@ const updateAbnormalChart = (data) => {
     grid: {
       left: '3%',
       right: '4%',
-      bottom: '3%',
-      top: '15%',
+      bottom: '0%',
       containLabel: true
     },
     xAxis: {
@@ -613,13 +610,16 @@ const updateMonthlyChart = (data) => {
 // 更新实时功率表盘
 const updatePowerGauge = () => {
   if (!chartInstances.gauge) return;
-  
+
   // 随机生成当前功率值(0-100)
   const powerValue = Math.floor(Math.random() * 100);
-  
+  const gaugeRadius = '70%'; // 核心调整项：控制仪表盘大小
+
   const option = {
     title: {
       text: '实时功率表盘',
+      center: ['50%', '60%'], // 位置与半径配合调整
+      radius: gaugeRadius, // 半径大小（核心参数）
       textStyle: {
         fontSize: 14
       }
@@ -631,7 +631,7 @@ const updatePowerGauge = () => {
       {
         name: '实时功率',
         type: 'gauge',
-        detail: { 
+        detail: {
           formatter: '{value}%',
           fontSize: 16
         },
@@ -659,7 +659,7 @@ const updatePowerGauge = () => {
       }
     ]
   };
-  
+
   chartInstances.gauge.setOption(option);
 };
 
@@ -722,7 +722,7 @@ onMounted(() => {
   position: relative;
   width: 100%;
   height: calc(100% - 80px);
-  min-height: 800px;
+  min-height: 700px;
 }
 
 .chart-item {
@@ -740,7 +740,7 @@ onMounted(() => {
   top: 0;
   left: 0;
   width: 65%;
-  height: 40%;
+  height: 400px;
 }
 
 /* 电能效率分析图 */
@@ -748,38 +748,38 @@ onMounted(() => {
   top: 0;
   right: 0;
   width: 34%;
-  height: 40%;
+  height: 400px;
 }
 
 /* 能量分配比例图 */
 #distribution-chart {
-  top: 41%;
+  top: 430px;
   left: 0;
   width: 33%;
-  height: 30%;
+  height: 400px;
 }
 
 /* 异常情况统计图 */
 #abnormal-chart {
-  top: 41%;
+  top: 430px;
   left: 34%;
   width: 33%;
-  height: 30%;
+  height: 400px;
 }
 
 /* 实时功率表盘 */
 #power-gauge {
-  top: 41%;
+  top: 430px;
   right: 0;
   width: 32%;
-  height: 30%;
+  height: 400px;
 }
 
 /* 月度电力统计图 */
 #monthly-chart {
-  top: 72%;
+  top: 900px;
   left: 0;
   width: 100%;
-  height: 28%;
+  height: 60%;
 }
 </style>
