@@ -137,7 +137,7 @@
             <el-button type="text" @click="handleRefreshDevices">刷新</el-button>
           </div>
         </template>
-        <el-scrollbar height="250px">
+        <el-scrollbar >
           <el-table :data="deviceList" style="width: 100%" size="small" :border="true">
             <el-table-column prop="name" label="设备名称" width="120" />
             <el-table-column prop="status" label="状态" width="80">
@@ -968,6 +968,6 @@ export default defineComponent({
 }
 
 .device-list-container .el-table {
-  max-height: 250px;
+  max-height: 600px;
 }
 </style>
