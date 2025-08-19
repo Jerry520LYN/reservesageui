@@ -343,7 +343,18 @@ const updateEfficiencyChart = (data) => {
         max: 1,
         position: 'left',
         axisLabel: {
-          formatter: '{value * 100}%'
+          // 修复效率百分比显示格式问题
+          formatter: function(value) {
+            return (value * 100).toFixed(0) + '%'; // 确保正确计算并显示百分比
+          }
+        },
+        splitLine: {
+          show: true,
+          lineStyle: {
+            color: '#9C27B0',
+            width: 1,
+            type: 'solid'
+          }
         }
       },
       {
@@ -567,7 +578,10 @@ const updateMonthlyChart = (data) => {
         min: 0.7,
         max: 1,
         axisLabel: {
-          formatter: '{value * 100}%'
+          //修复百分比显示问题
+          formatter: function(value) {
+            return (value * 100).toFixed(0) + '%';
+          }
         }
       }
     ],
