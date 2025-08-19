@@ -383,8 +383,8 @@ const powerFactorChartOption = reactive({
   },
   grid: {
     left: '3%',
-    right: '4%',
-    bottom: '8%',
+    right: '13%',
+    bottom: '3%',
     top: '10%',
     containLabel: true
   },
@@ -1111,39 +1111,17 @@ export default {
 .chart {
   width: 100%;
   height: 100%;
+  bottom: 10px;
 }
 
 /* 各图表定位 */
-.voltage-chart {
-  top: 240px;
-  left: 20px;
-  width: 800px;
-  height: 300px;
-}
-
-.power-factor-chart {
-  top: 240px;
-  Right:50px;
-  width: 800px;
-  height: 300px;
-}
-
-.reactive-power-chart {
-  top: 575px;
-  left: 20px;
-  width: 810px;
-  height: 300px;
-  padding:10px;
-}
-
 .compensation-units-status {
-  top: 900px;
+  top: 240px;
   left: 20px;
-  width: 800px;
+  width: 95%;
   height: 470px;
   overflow-y: auto;
 }
-
 .unit-status-content {
   margin-top: 10px;
 }
@@ -1166,12 +1144,11 @@ export default {
 }
 
 .alarm-table {
-  top: 575px;
-  Right:50px;
-  width: 800px;
+  top: 800px;
+  left: 20px;
+  width: 95%;
   height: 790px;
 }
-
 
 .pagination-container {
   margin-top: 15px;
@@ -1179,17 +1156,30 @@ export default {
   justify-content: center;
 }
 
-.compensation-gauge {
-  top: 860px;
-  left: calc(50% + 10px);
-  width: calc(30% - 30px);
+.reactive-power-chart {
+  top: 1600px;
+  left: 20px;
+  width: 700px;
+  height: 400px;
+}
+.power-factor-chart {
+  top: 1600px;
+  Right:50px;
+  width: 500px;
   height: 400px;
 }
 
+.voltage-chart {
+  top: 2050px;
+  left: 20px;
+  width: 95%;
+  height: 300px;
+}
+
 .waveform-chart {
-  top: 1405px;
+  top: 2400px;
   left:20px;
-  width: 1650px;
+  width: 95%;
   height: 400px;
 }
 
