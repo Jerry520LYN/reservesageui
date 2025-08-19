@@ -44,8 +44,6 @@
       <!-- 电价与收益对比图 -->
       <div class="chart-box income-analysis" id="incomeAnalysisChart"></div>
       
-      <!-- 环境参数监测图 -->
-      <div class="chart-box environment-params" id="environmentParamsChart"></div>
     </div>
 
     <!-- 数据表格展示 -->
@@ -843,7 +841,6 @@ export default {
 .power-curve {
   left: 0;
   top: 0;
-  bottom:3;
   width: 50%;
   height: 380px;
 }
@@ -859,24 +856,24 @@ export default {
 /* SOC变化趋势图 */
 .soc-trend {
   left: 0;
-  top: 400px;
+  top: 410px;
   width: 28%;
   height: 380px;
 }
 
 /* 电站运行状态饼图 */
 .operation-status {
-  left: 33.5%;
-  top: 400px;
-  width: 32%;
+  left: 30%;
+  top: 410px;
+  width: 35%;
   height: 380px;
 }
 
 /* 电价与收益对比图 */
 .income-analysis {
   right: 0;
-  top: 400px;
-  width: 32%;
+  top: 410px;
+  width: 31.5%;
   height: 380px;
 }
 
