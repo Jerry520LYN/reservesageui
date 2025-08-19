@@ -408,7 +408,7 @@ const updateDistributionChart = (data) => {
     legend: {
       orient: 'vertical',
       left: 'left',
-      top: 'center',
+      bottom: 0,
       data: data.types
     },
     series: [
@@ -633,13 +633,18 @@ const updatePowerGauge = () => {
         type: 'gauge',
         detail: {
           formatter: '{value}%',
-          fontSize: 16
+          fontSize: 16,
+          offsetCenter: [0, '60%'], // 调整数值位置（水平居中，垂直向下偏移60%）
         },
-        data: [{ value: powerValue, name: '功率负载' }],
+        data: [{
+          value: powerValue,
+          name: '功率负载'
+        }],
         axisLabel: {
           formatter: function(value) {
             return value + '%';
-          }
+          },
+          distance: 32, // 刻度标签与表盘的距离
         },
         axisLine: {
           lineStyle: {
@@ -739,31 +744,15 @@ onMounted(() => {
 #charging-chart {
   top: 0;
   left: 0;
-  width: 65%;
+  width: 100%;
   height: 400px;
 }
 
 /* 电能效率分析图 */
 #efficiency-chart {
-  top: 0;
-  right: 0;
-  width: 34%;
-  height: 400px;
-}
-
-/* 能量分配比例图 */
-#distribution-chart {
   top: 430px;
   left: 0;
-  width: 33%;
-  height: 400px;
-}
-
-/* 异常情况统计图 */
-#abnormal-chart {
-  top: 430px;
-  left: 34%;
-  width: 33%;
+  width: 65%;
   height: 400px;
 }
 
@@ -775,9 +764,27 @@ onMounted(() => {
   height: 400px;
 }
 
+/* 能量分配比例图 */
+#distribution-chart {
+  top: 870px;
+  left: 0;
+  width: 60%;
+  height: 400px;
+}
+
+/* 异常情况统计图 */
+#abnormal-chart {
+  top: 870px;
+  right: 0;
+  width: 38%;
+  height: 400px;
+}
+
+
+
 /* 月度电力统计图 */
 #monthly-chart {
-  top: 900px;
+  top: 1300px;
   left: 0;
   width: 100%;
   height: 60%;
