@@ -3,6 +3,7 @@
     <div class="page-header">
       <h2>直流屏监控系统</h2>
       <div class="header-actions">
+
         <el-date-picker
           v-model="dateRange"
           type="daterange"
@@ -12,18 +13,19 @@
           value-format="YYYY-MM-DD"
           @change="handleDateChange"
         />
-        <el-select v-model="refreshRate" placeholder="刷新频率" @change="handleRefreshRateChange">
+        <el-select v-model="refreshRate" placeholder="刷新频率" @change="handleRefreshRateChange" class="refresh-rate-select">
           <el-option label="5秒" :value="5" />
           <el-option label="10秒" :value="10" />
           <el-option label="30秒" :value="30" />
           <el-option label="60秒" :value="60" />
         </el-select>
+    
         <el-button type="primary" @click="refreshData">刷新数据</el-button>
       </div>
     </div>
     
     <!-- 系统状态总览卡片 -->
-    <div class="status-card" style="position: absolute; top: 80px; left: 20px; width: 300px; height: 180px;">
+    <div id="status-card-wrapper" class="status-card">
       <el-card shadow="hover">
         <template #header>
           <div class="card-header">
@@ -55,7 +57,7 @@
     </div>
     
     <!-- 电压监测图表 -->
-    <div class="chart-container" style="position: absolute; top: 80px; left: 340px; width: calc(100% - 700px); height: 300px;">
+    <div id="voltage-chart-wrapper" class="chart-container">
       <el-card shadow="hover">
         <template #header>
           <div class="card-header">
@@ -66,12 +68,12 @@
             </el-select>
           </div>
         </template>
-        <div ref="voltageChart" class="chart"></div>
+        <div id="voltage-chart" ref="voltageChart" class="chart-item chart"></div>
       </el-card>
     </div>
     
     <!-- 电流监测图表 -->
-    <div class="chart-container" style="position: absolute; top: 80px; right: 20px; width: 320px; height: 300px;">
+    <div id="current-chart-wrapper" class="chart-container">
       <el-card shadow="hover">
         <template #header>
           <div class="card-header">
@@ -82,24 +84,24 @@
             </el-select>
           </div>
         </template>
-        <div ref="currentChart" class="chart"></div>
+        <div id="current-chart" ref="currentChart" class="chart-item chart"></div>
       </el-card>
     </div>
     
     <!-- 电池组状态监测 -->
-    <div class="chart-container" style="position: absolute; top: 280px; left: 20px; width: 300px; height: 280px;">
+    <div id="battery-status-chart-wrapper" class="chart-container">
       <el-card shadow="hover">
         <template #header>
           <div class="card-header">
             <span>电池组状态</span>
           </div>
         </template>
-        <div ref="batteryStatusChart" class="chart"></div>
+        <div id="battery-status-chart" ref="batteryStatusChart" class="chart-item chart"></div>
       </el-card>
     </div>
     
     <!-- 温度监测图表 -->
-    <div class="chart-container" style="position: absolute; top: 400px; left: 340px; width: calc(100% - 700px); height: 280px;">
+    <div id="temperature-chart-wrapper" class="chart-container">
       <el-card shadow="hover">
         <template #header>
           <div class="card-header">
@@ -109,12 +111,12 @@
             </el-tooltip>
           </div>
         </template>
-        <div ref="temperatureChart" class="chart"></div>
+        <div id="temperature-chart" ref="temperatureChart" class="chart-item chart"></div>
       </el-card>
     </div>
     
     <!-- 告警统计图表 -->
-    <div class="chart-container" style="position: absolute; top: 400px; right: 20px; width: 320px; height: 280px;">
+    <div id="alarm-chart-wrapper" class="chart-container">
       <el-card shadow="hover">
         <template #header>
           <div class="card-header">
@@ -122,12 +124,12 @@
             <el-button type="text" @click="handleViewAllAlarms">查看全部</el-button>
           </div>
         </template>
-        <div ref="alarmChart" class="chart"></div>
+        <div id="alarm-chart" ref="alarmChart" class="chart-item chart"></div>
       </el-card>
     </div>
     
     <!-- 直流屏设备列表 -->
-    <div class="device-list-container" style="position: absolute; top: 580px; left: 20px; width: 300px; height: 320px;">
+    <div id="device-list-wrapper" class="device-list-container">
       <el-card shadow="hover">
         <template #header>
           <div class="card-header">
@@ -152,7 +154,7 @@
     </div>
     
     <!-- 最近告警信息 -->
-    <div class="alarm-list-container" style="position: absolute; top: 700px; left: 340px; width: calc(100% - 360px); height: 200px;">
+    <div id="alarm-list-wrapper" class="alarm-list-container">
       <el-card shadow="hover">
         <template #header>
           <div class="card-header">
@@ -842,7 +844,7 @@ export default defineComponent({
 <style scoped>
 .dc-screen-monitor {
   position: relative;
-  width: 100%;
+  width: 1200px;
   height: 100%;
   padding: 20px;
   background-color: #f5f7fa;
@@ -851,9 +853,9 @@ export default defineComponent({
 
 .page-header {
   display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 20px;
+  align-items: left;
+  margin-bottom: 2px;
+  gap:50px;
 }
 
 .page-header h2 {
@@ -861,11 +863,18 @@ export default defineComponent({
   font-size: 24px;
   font-weight: bold;
   color: #303133;
+  align-items: center;
 }
 
 .header-actions {
   display: flex;
-  gap: 10px;
+  align-items: center; /* 确保内部元素也垂直居中 */
+  gap: 15px; /* 可以调整为您想要的间距，例如 15px */
+  margin-left: auto;
+}
+
+.refresh-rate-select {
+  width: 120px;
 }
 
 .card-header {
@@ -877,6 +886,10 @@ export default defineComponent({
 .chart {
   width: 100%;
   height: 220px;
+}
+
+.chart-item {
+  /* This class is for easier selection of all chart divs. */
 }
 
 .status-info {
@@ -899,7 +912,72 @@ export default defineComponent({
   max-height: 250px;
 }
 
-/* 确保绝对定位元素不会超出边界 */
+/* Page Layout Styling */
+#status-card-wrapper {
+  position: absolute;
+  top: 80px;
+  left: 20px;
+  width: 300px;
+  height: 180px;
+}
+
+#voltage-chart-wrapper {
+  position: absolute;
+  top: 80px;
+  left: 328px;
+  width: 880px;
+  height: 390px;
+}
+
+#current-chart-wrapper {
+  position: absolute;
+  top: 800px;
+  right: 20px;
+  width: 320px;
+  height: 300px;
+}
+
+#battery-status-chart-wrapper {
+  position: absolute;
+  top: 280px;
+  left: 20px;
+  width: 300px;
+  height: 280px;
+}
+
+#temperature-chart-wrapper {
+  position: absolute;
+  top: 400px;
+  left: 340px;
+  width: calc(100% - 700px);
+  height: 280px;
+}
+
+#alarm-chart-wrapper {
+  position: absolute;
+  top: 400px;
+  right: 20px;
+  width: 320px;
+  height: 280px;
+}
+
+#device-list-wrapper {
+  position: absolute;
+  top: 580px;
+  left: 20px;
+  width: 300px;
+  height: 320px;
+}
+
+#alarm-list-wrapper {
+  position: absolute;
+  top: 700px;
+  left: 340px;
+  width: calc(100% - 360px);
+  height: 200px;
+}
+
+/* Ensure absolutely positioned elements do not overflow */
 .chart-container, .status-card, .device-list-container, .alarm-list-container {
   overflow: hidden;
 }
