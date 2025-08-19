@@ -230,8 +230,7 @@ const updateChargingChart = (data) => {
     grid: {
       left: '3%',
       right: '4%',
-      bottom: '3%',
-      top: '15%',
+      bottom: '0%',
       containLabel: true
     },
     xAxis: {
@@ -329,8 +328,7 @@ const updateEfficiencyChart = (data) => {
     grid: {
       left: '3%',
       right: '4%',
-      bottom: '3%',
-      top: '15%',
+      bottom: '0%',
       containLabel: true
     },
     xAxis: {
@@ -345,7 +343,18 @@ const updateEfficiencyChart = (data) => {
         max: 1,
         position: 'left',
         axisLabel: {
-          formatter: '{value * 100}%'
+          // 修复效率百分比显示格式问题
+          formatter: function(value) {
+            return (value * 100).toFixed(0) + '%'; // 确保正确计算并显示百分比
+          }
+        },
+        splitLine: {
+          show: true,
+          lineStyle: {
+            color: '#9C27B0',
+            width: 1,
+            type: 'solid'
+          }
         }
       },
       {
@@ -410,7 +419,7 @@ const updateDistributionChart = (data) => {
     legend: {
       orient: 'vertical',
       left: 'left',
-      top: 'center',
+      bottom: 0,
       data: data.types
     },
     series: [
@@ -466,8 +475,7 @@ const updateAbnormalChart = (data) => {
     grid: {
       left: '3%',
       right: '4%',
-      bottom: '3%',
-      top: '15%',
+      bottom: '0%',
       containLabel: true
     },
     xAxis: {
@@ -570,7 +578,10 @@ const updateMonthlyChart = (data) => {
         min: 0.7,
         max: 1,
         axisLabel: {
-          formatter: '{value * 100}%'
+          //修复百分比显示问题
+          formatter: function(value) {
+            return (value * 100).toFixed(0) + '%';
+          }
         }
       }
     ],
@@ -613,13 +624,16 @@ const updateMonthlyChart = (data) => {
 // 更新实时功率表盘
 const updatePowerGauge = () => {
   if (!chartInstances.gauge) return;
-  
+
   // 随机生成当前功率值(0-100)
   const powerValue = Math.floor(Math.random() * 100);
-  
+  const gaugeRadius = '70%'; // 核心调整项：控制仪表盘大小
+
   const option = {
     title: {
       text: '实时功率表盘',
+      center: ['50%', '60%'], // 位置与半径配合调整
+      radius: gaugeRadius, // 半径大小（核心参数）
       textStyle: {
         fontSize: 14
       }
@@ -631,15 +645,20 @@ const updatePowerGauge = () => {
       {
         name: '实时功率',
         type: 'gauge',
-        detail: { 
+        detail: {
           formatter: '{value}%',
-          fontSize: 16
+          fontSize: 16,
+          offsetCenter: [0, '60%'], // 调整数值位置（水平居中，垂直向下偏移60%）
         },
-        data: [{ value: powerValue, name: '功率负载' }],
+        data: [{
+          value: powerValue,
+          name: '功率负载'
+        }],
         axisLabel: {
           formatter: function(value) {
             return value + '%';
-          }
+          },
+          distance: 32, // 刻度标签与表盘的距离
         },
         axisLine: {
           lineStyle: {
@@ -659,7 +678,7 @@ const updatePowerGauge = () => {
       }
     ]
   };
-  
+
   chartInstances.gauge.setOption(option);
 };
 
@@ -722,7 +741,7 @@ onMounted(() => {
   position: relative;
   width: 100%;
   height: calc(100% - 80px);
-  min-height: 800px;
+  min-height: 700px;
 }
 
 .chart-item {
@@ -739,47 +758,49 @@ onMounted(() => {
 #charging-chart {
   top: 0;
   left: 0;
-  width: 65%;
-  height: 40%;
+  width: 100%;
+  height: 400px;
 }
 
 /* 电能效率分析图 */
 #efficiency-chart {
-  top: 0;
-  right: 0;
-  width: 34%;
-  height: 40%;
-}
-
-/* 能量分配比例图 */
-#distribution-chart {
-  top: 41%;
+  top: 430px;
   left: 0;
-  width: 33%;
-  height: 30%;
-}
-
-/* 异常情况统计图 */
-#abnormal-chart {
-  top: 41%;
-  left: 34%;
-  width: 33%;
-  height: 30%;
+  width: 65%;
+  height: 400px;
 }
 
 /* 实时功率表盘 */
 #power-gauge {
-  top: 41%;
+  top: 430px;
   right: 0;
   width: 32%;
-  height: 30%;
+  height: 400px;
 }
+
+/* 能量分配比例图 */
+#distribution-chart {
+  top: 870px;
+  left: 0;
+  width: 60%;
+  height: 400px;
+}
+
+/* 异常情况统计图 */
+#abnormal-chart {
+  top: 870px;
+  right: 0;
+  width: 38%;
+  height: 400px;
+}
+
+
 
 /* 月度电力统计图 */
 #monthly-chart {
-  top: 72%;
+  top: 1300px;
   left: 0;
   width: 100%;
-  height: 28%;
+  height: 60%;
 }
 </style>
