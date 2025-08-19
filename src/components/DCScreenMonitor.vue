@@ -3,6 +3,7 @@
     <div class="page-header">
       <h2>直流屏监控系统</h2>
       <div class="header-actions">
+
         <el-date-picker
           v-model="dateRange"
           type="daterange"
@@ -12,18 +13,19 @@
           value-format="YYYY-MM-DD"
           @change="handleDateChange"
         />
-        <el-select v-model="refreshRate" placeholder="刷新频率" @change="handleRefreshRateChange">
+        <el-select v-model="refreshRate" placeholder="刷新频率" @change="handleRefreshRateChange" class="refresh-rate-select">
           <el-option label="5秒" :value="5" />
           <el-option label="10秒" :value="10" />
           <el-option label="30秒" :value="30" />
           <el-option label="60秒" :value="60" />
         </el-select>
+    
         <el-button type="primary" @click="refreshData">刷新数据</el-button>
       </div>
     </div>
     
     <!-- 系统状态总览卡片 -->
-    <div class="status-card" style="position: absolute; top: 80px; left: 20px; width: 300px; height: 180px;">
+    <div id="status-card-wrapper" class="status-card">
       <el-card shadow="hover">
         <template #header>
           <div class="card-header">
@@ -55,7 +57,7 @@
     </div>
     
     <!-- 电压监测图表 -->
-    <div class="chart-container" style="position: absolute; top: 80px; left: 340px; width: calc(100% - 700px); height: 300px;">
+    <div id="voltage-chart-wrapper" class="chart-container">
       <el-card shadow="hover">
         <template #header>
           <div class="card-header">
@@ -66,12 +68,12 @@
             </el-select>
           </div>
         </template>
-        <div ref="voltageChart" class="chart"></div>
+        <div id="voltage-chart" ref="voltageChart" class="chart-item chart"></div>
       </el-card>
     </div>
     
     <!-- 电流监测图表 -->
-    <div class="chart-container" style="position: absolute; top: 80px; right: 20px; width: 320px; height: 300px;">
+    <div id="current-chart-wrapper" class="chart-container">
       <el-card shadow="hover">
         <template #header>
           <div class="card-header">
@@ -82,24 +84,24 @@
             </el-select>
           </div>
         </template>
-        <div ref="currentChart" class="chart"></div>
+        <div id="current-chart" ref="currentChart" class="chart-item chart"></div>
       </el-card>
     </div>
     
     <!-- 电池组状态监测 -->
-    <div class="chart-container" style="position: absolute; top: 280px; left: 20px; width: 300px; height: 280px;">
+    <div id="battery-status-chart-wrapper" class="chart-container">
       <el-card shadow="hover">
         <template #header>
           <div class="card-header">
             <span>电池组状态</span>
           </div>
         </template>
-        <div ref="batteryStatusChart" class="chart"></div>
+        <div id="battery-status-chart" ref="batteryStatusChart" class="chart-item chart"></div>
       </el-card>
     </div>
     
     <!-- 温度监测图表 -->
-    <div class="chart-container" style="position: absolute; top: 400px; left: 340px; width: calc(100% - 700px); height: 280px;">
+    <div id="temperature-chart-wrapper" class="chart-container">
       <el-card shadow="hover">
         <template #header>
           <div class="card-header">
@@ -109,12 +111,12 @@
             </el-tooltip>
           </div>
         </template>
-        <div ref="temperatureChart" class="chart"></div>
+        <div id="temperature-chart" ref="temperatureChart" class="chart-item chart"></div>
       </el-card>
     </div>
     
     <!-- 告警统计图表 -->
-    <div class="chart-container" style="position: absolute; top: 400px; right: 20px; width: 320px; height: 280px;">
+    <div id="alarm-chart-wrapper" class="chart-container">
       <el-card shadow="hover">
         <template #header>
           <div class="card-header">
@@ -122,12 +124,12 @@
             <el-button type="text" @click="handleViewAllAlarms">查看全部</el-button>
           </div>
         </template>
-        <div ref="alarmChart" class="chart"></div>
+        <div id="alarm-chart" ref="alarmChart" class="chart-item chart"></div>
       </el-card>
     </div>
     
     <!-- 直流屏设备列表 -->
-    <div class="device-list-container" style="position: absolute; top: 580px; left: 20px; width: 300px; height: 320px;">
+    <div id="device-list-wrapper" class="device-list-container">
       <el-card shadow="hover">
         <template #header>
           <div class="card-header">
@@ -135,7 +137,7 @@
             <el-button type="text" @click="handleRefreshDevices">刷新</el-button>
           </div>
         </template>
-        <el-scrollbar height="250px">
+        <el-scrollbar >
           <el-table :data="deviceList" style="width: 100%" size="small" :border="true">
             <el-table-column prop="name" label="设备名称" width="120" />
             <el-table-column prop="status" label="状态" width="80">
@@ -152,7 +154,7 @@
     </div>
     
     <!-- 最近告警信息 -->
-    <div class="alarm-list-container" style="position: absolute; top: 700px; left: 340px; width: calc(100% - 360px); height: 200px;">
+    <div id="alarm-list-wrapper" class="alarm-list-container">
       <el-card shadow="hover">
         <template #header>
           <div class="card-header">
@@ -838,22 +840,29 @@ export default defineComponent({
   }
 });
 </script>
-
 <style scoped>
+/* --- 1. 主容器和页面头部 --- */
 .dc-screen-monitor {
-  position: relative;
-  width: 100%;
-  height: 100%;
+  width: 1200px;
+  margin: 0 auto; /* 让容器在大于1200px的屏幕上居中 */
   padding: 20px;
   background-color: #f5f7fa;
-  min-height: 950px;
+  
+  /* === CSS Grid 核心 === */
+  display: grid;
+  /* 定义三列：左侧300px，中间自动填充剩余空间，右侧320px */
+  grid-template-columns: 300px 1fr 320px;
+  /* 定义行高自动，并设置所有元素的间距 */
+  grid-auto-rows: auto;
+  gap: 20px; /* 控制所有卡片之间的间距 */
 }
 
 .page-header {
+  /* 让头部占据所有三列的宽度 */
+  grid-column: 1 / -1; 
   display: flex;
-  justify-content: space-between;
   align-items: center;
-  margin-bottom: 20px;
+  margin-bottom: 20px; /* 增加一点和下面内容的间距 */
 }
 
 .page-header h2 {
@@ -865,20 +874,83 @@ export default defineComponent({
 
 .header-actions {
   display: flex;
-  gap: 10px;
+  align-items: center;
+  gap: 15px;
+  margin-left: auto;
 }
 
+/* --- 2. 通用卡片和图表样式 --- */
 .card-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
 }
 
-.chart {
-  width: 100%;
-  height: 220px;
+/* 让 el-card 和 chart 填满父容器（Grid单元格）的高度 */
+.el-card {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+.el-card__body {
+  flex-grow: 1;
 }
 
+.chart {
+  width: 100%;
+  height: 100%; /* 占满卡片剩余空间 */
+  min-height: 200px; /* 保证一个最小高度 */
+}
+
+/* --- 3. 网格布局定位 (替换所有 position: absolute) --- */
+
+/* --- 左侧列 (Column 1) --- */
+#status-card-wrapper {
+  grid-column: 1 / 2;
+  grid-row: 2 / 3; /* 头部在第1行，所以从第2行开始 */
+}
+
+#battery-status-chart-wrapper {
+  grid-column: 1 / 2;
+  grid-row: 3 / 4;
+}
+
+#device-list-wrapper {
+  grid-column: 1 / 2;
+  grid-row: 4 / 6; /* 让设备列表占据两行的高度空间 */
+}
+
+/* --- 中间主内容区 (Column 2) --- */
+#voltage-chart-wrapper {
+  grid-column: 2 / 4;
+  grid-row: 2 / 3; /* 让电压表占据两行的高度，更突出 */
+}
+
+#current-chart-wrapper {
+  grid-column: 2 / 4;
+  grid-row: 3 / 3;
+}
+
+#temperature-chart-wrapper {
+  grid-column: 2 / 3;
+  grid-row: 4 / 5;
+}
+
+#alarm-list-wrapper {
+  /* 让告警列表占据中间和右侧两列，更宽敞 */
+  grid-column: 2 / 4;
+  grid-row: 5 / 5;
+}
+
+/* --- 右侧列 (Column 3) --- */
+
+
+#alarm-chart-wrapper {
+  grid-column: 3 / 4;
+  grid-row: 4 / 5;
+}
+
+/* --- 其他样式 --- */
 .status-info {
   display: flex;
   flex-direction: column;
@@ -896,11 +968,6 @@ export default defineComponent({
 }
 
 .device-list-container .el-table {
-  max-height: 250px;
-}
-
-/* 确保绝对定位元素不会超出边界 */
-.chart-container, .status-card, .device-list-container, .alarm-list-container {
-  overflow: hidden;
+  max-height: 600px;
 }
 </style>

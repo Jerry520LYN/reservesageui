@@ -44,28 +44,26 @@
       <!-- 电价与收益对比图 -->
       <div class="chart-box income-analysis" id="incomeAnalysisChart"></div>
       
-      <!-- 环境参数监测图 -->
-      <div class="chart-box environment-params" id="environmentParamsChart"></div>
     </div>
 
     <!-- 数据表格展示 -->
     <div class="data-table">
       <el-table :data="tableData" border style="width: 100%" height="300" v-if="dataLoaded">
-        <el-table-column prop="time" label="时间点" width="180" />
-        <el-table-column prop="power" label="功率(kW)" width="120" />
-        <el-table-column prop="energy" label="电量(kWh)" width="120" />
-        <el-table-column prop="soc" label="SOC(%)" width="100" />
-        <el-table-column prop="chargeStatus" label="充放电状态" width="120">
+        <el-table-column prop="time" label="时间点" width="127" />
+        <el-table-column prop="power" label="功率(kW)" width="127" />
+        <el-table-column prop="energy" label="电量(kWh)" width="127" />
+        <el-table-column prop="soc" label="SOC(%)" width="127" />
+        <el-table-column prop="chargeStatus" label="充放电状态" width="127">
           <template #default="scope">
             <el-tag :type="scope.row.chargeStatus === '充电' ? 'success' : (scope.row.chargeStatus === '放电' ? 'danger' : 'info')">
               {{ scope.row.chargeStatus }}
             </el-tag>
           </template>
         </el-table-column>
-        <el-table-column prop="price" label="电价(元/kWh)" width="130" />
-        <el-table-column prop="income" label="收益(元)" width="120" />
-        <el-table-column prop="temperature" label="温度(℃)" width="120" />
-        <el-table-column prop="humidity" label="湿度(%)" width="120" />
+        <el-table-column prop="price" label="电价(元/kWh)" width="127" />
+        <el-table-column prop="income" label="收益(元)" width="127" />
+        <el-table-column prop="temperature" label="温度(℃)" width="127" />
+        <el-table-column prop="humidity" label="湿度(%)" width="127" />
       </el-table>
       <div class="empty-data" v-else>
         <el-empty description="暂无数据，请选择日期查询"></el-empty>
@@ -94,7 +92,6 @@ export default {
     let socTrendChart = null
     let operationStatusChart = null
     let incomeAnalysisChart = null
-    let environmentParamsChart = null
 
     // 限制日期选择 - 不能选择未来日期
     const disabledDate = (time) => {
@@ -179,7 +176,6 @@ export default {
       initSocTrendChart()
       initOperationStatusChart()
       initIncomeAnalysisChart()
-      initEnvironmentParamsChart()
     }
 
     // 初始化电量/功率曲线图
@@ -403,7 +399,7 @@ export default {
         },
         grid: {
           left: '3%',
-          right: '4%',
+          right: '8%',
           bottom: '12%',
           top: '15%',
           containLabel: true
@@ -522,7 +518,7 @@ export default {
           {
             name: '运行状态',
             type: 'pie',
-            radius: ['40%', '70%'],
+            radius: ['10%', '50%'],
             center: ['50%', '50%'],
             avoidLabelOverlap: false,
             itemStyle: {
@@ -579,7 +575,7 @@ export default {
           bottom: '0'
         },
         grid: {
-          left: '3%',
+          left: '8%',
           right: '4%',
           bottom: '12%',
           top: '15%',
@@ -648,119 +644,6 @@ export default {
       window.addEventListener('resize', () => incomeAnalysisChart.resize())
     }
     
-    // 初始化环境参数监测图
-    const initEnvironmentParamsChart = () => {
-      if (environmentParamsChart != null) {
-        environmentParamsChart.dispose()
-      }
-      
-      const chartDom = document.getElementById('environmentParamsChart')
-      environmentParamsChart = echarts.init(chartDom)
-      
-      const times = tableData.value.map(item => item.time)
-      const temperatures = tableData.value.map(item => parseFloat(item.temperature))
-      const humidities = tableData.value.map(item => item.humidity)
-      
-      const option = {
-        title: {
-          text: '环境参数监测',
-          left: 'center'
-        },
-        tooltip: {
-          trigger: 'axis',
-          axisPointer: {
-            type: 'cross'
-          }
-        },
-        legend: {
-          data: ['温度(℃)', '湿度(%)'],
-          bottom: '0'
-        },
-        grid: {
-          left: '3%',
-          right: '4%',
-          bottom: '12%',
-          top: '15%',
-          containLabel: true
-        },
-        xAxis: [
-          {
-            type: 'category',
-            data: times,
-            axisLabel: {
-              interval: 2
-            }
-          }
-        ],
-        yAxis: [
-          {
-            type: 'value',
-            name: '温度(℃)',
-            position: 'left',
-            axisLine: {
-              show: true,
-              lineStyle: {
-                color: '#EE6666'
-              }
-            },
-            min: 10,
-            max: 40
-          },
-          {
-            type: 'value',
-            name: '湿度(%)',
-            position: 'right',
-            axisLine: {
-              show: true,
-              lineStyle: {
-                color: '#73C0DE'
-              }
-            },
-            min: 0,
-            max: 100
-          }
-        ],
-        series: [
-          {
-            name: '温度(℃)',
-            type: 'line',
-            yAxisIndex: 0,
-            data: temperatures,
-            symbol: 'circle',
-            symbolSize: 6,
-            itemStyle: {
-              color: '#EE6666'
-            },
-            markLine: {
-              silent: true,
-              lineStyle: {
-                color: '#FF9E45'
-              },
-              data: [
-                {
-                  yAxis: 35,
-                  name: '高温警戒线'
-                }
-              ]
-            }
-          },
-          {
-            name: '湿度(%)',
-            type: 'line',
-            yAxisIndex: 1,
-            data: humidities,
-            symbol: 'circle',
-            symbolSize: 6,
-            itemStyle: {
-              color: '#73C0DE'
-            }
-          }
-        ]
-      }
-      
-      environmentParamsChart.setOption(option)
-      window.addEventListener('resize', () => environmentParamsChart.resize())
-    }
 
     // 组件挂载后执行
     onMounted(() => {
@@ -770,6 +653,7 @@ export default {
       const month = String(today.getMonth() + 1).padStart(2, '0')
       const day = String(today.getDate()).padStart(2, '0')
       queryDate.value = `${year}-${month}-${day}`
+      queryData()
     })
 
     return {
@@ -843,7 +727,7 @@ export default {
 .power-curve {
   left: 0;
   top: 0;
-  width: 66%;
+  width: 49%;
   height: 380px;
 }
 
@@ -851,40 +735,32 @@ export default {
 .charge-discharge {
   right: 0;
   top: 0;
-  width: 32%;
+  width: 47%;
   height: 380px;
 }
 
 /* SOC变化趋势图 */
 .soc-trend {
   left: 0;
-  top: 400px;
-  width: 32%;
+  top: 410px;
+  width: 31%;
   height: 380px;
 }
 
 /* 电站运行状态饼图 */
 .operation-status {
-  left: 33.5%;
-  top: 400px;
-  width: 32%;
+  left: 33%;
+  top: 410px;
+  width: 33%;
   height: 380px;
 }
 
 /* 电价与收益对比图 */
 .income-analysis {
   right: 0;
-  top: 400px;
-  width: 32%;
+  top: 410px;
+  width: 30%;
   height: 380px;
-}
-
-/* 环境参数监测图 */
-.environment-params {
-  left: 0;
-  bottom: 0;
-  width: 100%;
-  height: 0px; /* 这个图表暂时不显示，如果需要显示可调整其他图表的位置和大小 */
 }
 
 .data-table {
