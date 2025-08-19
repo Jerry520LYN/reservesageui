@@ -796,11 +796,33 @@ onUnmounted(() => {
 <style scoped>
 .bms-monitor-container {
   position: relative;
-  width: 100%;
-  height: 100%;
-  padding: 16px;
+  width: 1200px;
+  padding: 20px;
   background-color: #f5f7fa;
-  overflow-x: hidden;
+  display:grid;
+  grid-template-columns:1fr;
+  grid-auto-rows: auto;
+  grid-template-columns: 
+    1180px
+    1180px
+    1180px
+    1180px
+    1180px
+    1180px
+    1180px
+    1180px
+    1180px;
+  grid-template-rows: 
+    auto      /* 第1行: 头部，高度自适应 */
+    auto      /* 第2行: 状态卡片，高度自适应 */
+    330px     /* 第3行: 第一个图表，固定高度 300px */
+    330px     /* 第4行: 第二个图表，固定高度 300px */
+    330px     /* 第5行: 第三个图表，固定高度 300px */
+    330px     /* 第6行: 第四个图表，固定高度 300px */
+    330px     /* 第7行: 第五个图表，固定高度 300px */
+    330px     /* 第8行: 第六个图表，固定高度 300px */
+    auto;     /* 第9行: 告警表格，高度自适应 */
+  gap:20px;
 }
 
 /* 头部样式 */
@@ -824,7 +846,8 @@ onUnmounted(() => {
 
 /* 状态卡片样式 */
 .status-overview {
-  margin-bottom: 20px;
+  grid-column: 1 / 2;
+  grid-row: 2 / 3;
 }
 
 .status-item {
@@ -866,7 +889,6 @@ onUnmounted(() => {
 
 /* 图表容器样式 */
 .chart-container {
-  position: absolute;
   background-color: #ffffff;
   border-radius: 4px;
   padding: 16px;
@@ -887,57 +909,49 @@ onUnmounted(() => {
 
 /* 各图表位置 */
 .temperature-chart {
-  left: 16px;
-  top: 200px;
-  width: calc(50% - 24px);
-  height: 300px;
+  grid-column: 1 / 2;
+  grid-row: 3 / 4;
+  margin-bottom: 330px;
 }
 
 .voltage-chart {
-  right: 16px;
-  top: 200px;
-  width: calc(50% - 24px);
-  height: 300px;
+  grid-column: 1 / 2;
+  grid-row: 4 / 5;
+  margin-bottom: 330px;
+
 }
 
 .current-chart {
-  left: 16px;
-  top: 516px;
-  width: calc(50% - 24px);
-  height: 300px;
+  grid-column: 1 / 2;
+  margin-bottom: 330px;
+  grid-row: 5 / 6;
+
 }
 
 .soc-chart {
-  right: 16px;
-  top: 516px;
-  width: calc(50% - 24px);
-  height: 300px;
+  grid-column: 1 / 2;
+  margin-bottom: 330px;
+  grid-row: 6 / 7;
+
 }
 
 .soh-chart {
-  left: 16px;
-  top: 832px;
-  width: calc(50% - 24px);
-  height: 300px;
+  grid-column: 1 / 2;
+  margin-bottom: 330px;
+  grid-row: 7 / 8;
+
 }
 
 .cell-voltage-chart {
-  right: 16px;
-  top: 832px;
-  width: calc(50% - 24px);
-  height: 300px;
+  grid-column: 1 / 2;
+  grid-row: 8 / 9;
+  margin-bottom: 330px;
 }
 
 .alert-table {
-  position: absolute;
-  left: 16px;
-  top: 1148px;
-  width: calc(100% - 32px);
-  padding: 16px;
-  background-color: #ffffff;
-  border-radius: 4px;
-  box-shadow: 0 2px 12px 0 rgba(0, 0, 0, 0.1);
-  margin-bottom: 16px;
+  grid-column: 1 / 2;
+  grid-row: 9 / 10;
+  margin-bottom: 330px;
 }
 </style>
 
